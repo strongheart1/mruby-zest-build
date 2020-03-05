@@ -45,7 +45,7 @@
 	url = https://github.com/mruby-zest/pugl.git
 [submodule "deps/osc-bridge"]
 	path = src/osc-bridge
-	url = https://github.com/mruby-zest/osc-bridge
+	url = https://github.com/strongheart1/osc-bridge
 [submodule "deps/mruby-complex"]
 	path = deps/mruby-complex
 	url = https://github.com/pbosetti/mruby-complex
