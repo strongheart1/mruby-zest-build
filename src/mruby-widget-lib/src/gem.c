@@ -975,6 +975,7 @@ mrb_remote_param_set_value(mrb_state *mrb, mrb_value self)
             const float b = log(param->min);
             const float a = log(param->max)-b;
             out = expf(a*x+b);
+			printf("min:%f, max:%f, a:%f, b:%f, out:%f\n",param->min, param->max, a, b, out); // Test  log scaling
         } else
             out = (param->max-param->min)*value + param->min;
         br_set_value_float(param->br, param->uri, out);
