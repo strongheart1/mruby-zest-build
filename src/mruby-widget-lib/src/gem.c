@@ -802,10 +802,11 @@ remote_cb(const char *msg, void *data)
         remote_cb_int(msg, cb);
     else if(!strcmp("f", arg_str)) {
         float val = rtosc_argument(msg, 0).f;
-        if(cb->log) {
+		if(cb->log) {
             const float b = log(cb->min);
             const float a = log(cb->max)-b;
-            val = (logf(val)-b)/a;
+			val = (logf(val)-b)/a; // inverse function of mrb_remote_param_set_value
+			printf("remote_cb:: min:%f, max:%f, a:%f, b:%f, out:%f\n",cb->min, cb->max, a, b, val); // Test  log scaling
         } else
             val = (val-cb->min)/(cb->max-cb->min);
         mrb_funcall(cb->mrb, cb->cb, "call", 1, mrb_float_value(cb->mrb, val));
@@ -975,7 +976,7 @@ mrb_remote_param_set_value(mrb_state *mrb, mrb_value self)
             const float b = log(param->min);
             const float a = log(param->max)-b;
             out = expf(a*x+b);
-			printf("min:%f, max:%f, a:%f, b:%f, out:%f\n",param->min, param->max, a, b, out); // Test  log scaling
+			printf("Min::%f, max:%f, a:%f, b:%f, out:%f\n",param->min, param->max, a, b, out); // Test  log scaling
         } else
             out = (param->max-param->min)*value + param->min;
         br_set_value_float(param->br, param->uri, out);
