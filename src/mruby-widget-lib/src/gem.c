@@ -812,7 +812,7 @@ remote_cb(const char *msg, void *data)
 				const float a = log(4096);
 				const float b = log(cb->max)-a;
 				val = log1pf(val*4096/cb->max)/a; // inverse function of mrb_remote_param_set_value
-				printf("MOD:: remote_cb:: val:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",rtosc_argument(msg, 0).f, cb->min, cb->max, a, b, val); // Test  log scaling
+				printf("MOD::remote_cb:: val:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",rtosc_argument(msg, 0).f, cb->min, cb->max, a, b, val); // Test  log scaling
 				}
 			} else
             val = (val-cb->min)/(cb->max-cb->min);
@@ -989,7 +989,7 @@ mrb_remote_param_set_value(mrb_state *mrb, mrb_value self)
 				const float a = log(4096.0);
 				const float b = log(param->max)-a;
 				out = expm1f(a*x)*param->max/4096.0;
-				printf("MOD:: in:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",x , param->min, param->max, a, b, out);
+				printf("MOD:: in:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",x , param->min, param->max, a, b, out);// Test log scaling
 				}
 			} else
             out = (param->max-param->min)*value + param->min;
