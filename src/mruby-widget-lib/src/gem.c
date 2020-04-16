@@ -716,7 +716,7 @@ remote_cb_127(const char *msg, remote_cb_data *cb)
 {
     //assume the 0..127 integer case for the input
     //assume the 0..1   float   case for the output
-	printf("remote_cb_127\n");
+
     mrb_assert(!strcmp("i",rtosc_argument_string(msg)));
     int arg = rtosc_argument(msg, 0).i;
 
@@ -807,14 +807,14 @@ remote_cb(const char *msg, void *data)
 				const float b = log(cb->min);
 				const float a = log(cb->max)-b;
 				val = (logf(val)-b)/a; // inverse function of mrb_remote_param_set_value
-				printf("remote_cb:: val:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",rtosc_argument(msg, 0).f, cb->min, cb->max, a, b, val); // Test  log scaling
-				}else { // min <= 0
+				//printf("remote_cb:: val:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",rtosc_argument(msg, 0).f, cb->min, cb->max, a, b, val); // Test  log scaling
+			}else { // min <= 0
 				const float a = log(4096);
 				const float b = log(cb->max)-a;
 				val = log1pf(val*4096/cb->max)/a; // inverse function of mrb_remote_param_set_value
-				printf("MOD::remote_cb:: val:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",rtosc_argument(msg, 0).f, cb->min, cb->max, a, b, val); // Test  log scaling
-				}
-			} else
+				//printf("MOD::remote_cb:: val:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",rtosc_argument(msg, 0).f, cb->min, cb->max, a, b, val); // Test  log scaling
+			}
+		} else
             val = (val-cb->min)/(cb->max-cb->min);
         mrb_funcall(cb->mrb, cb->cb, "call", 1, mrb_float_value(cb->mrb, val));
     } else if(!strcmp("T", arg_str))
@@ -979,19 +979,19 @@ mrb_remote_param_set_value(mrb_state *mrb, mrb_value self)
     } else if(param->type == 'f') {
         const float x = value;
         float out = 0;
-        if(param->scale && strstr(param->scale, "log")) {
+		if(param->scale && strstr(param->scale, "log")) {
 			if (param->min > 0) {
 				const float b = log(param->min);
 				const float a = log(param->max)-b;
 				out = expf(a*x+b);
 				printf("in:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",x , param->min, param->max, a, b, out); // Test  log scaling
-				} else { // min <= 0 ( e.g. envelope time param )
+			} else { // min <= 0 ( e.g. envelope time param )
 				const float a = log(4096.0);
 				const float b = log(param->max)-a;
 				out = expm1f(a*x)*param->max/4096.0;
 				printf("MOD:: in:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",x , param->min, param->max, a, b, out);// Test log scaling
-				}
-			} else
+			}
+		} else
             out = (param->max-param->min)*value + param->min;
         br_set_value_float(param->br, param->uri, out);
     }
