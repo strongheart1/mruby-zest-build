@@ -803,10 +803,11 @@ remote_cb(const char *msg, void *data)
     else if(!strcmp("f", arg_str)) {
         float val = rtosc_argument(msg, 0).f;
 		if(cb->log) {
+			// inverse function of the function in "mrb_remote_param_set_value"
 			if (cb->min > 0){
 				const float b = log(cb->min);
 				const float a = log(cb->max)-b;
-				val = (logf(val)-b)/a; // inverse function of mrb_remote_param_set_value
+				val = (logf(val)-b)/a;
 				//printf("remote_cb:: val:%f, min:%f, max:%f, a:%f, b:%f, out:%f\n",rtosc_argument(msg, 0).f, cb->min, cb->max, a, b, val); // Test  log scaling
 			}else { // min <= 0
 				const float a = log(4096);
